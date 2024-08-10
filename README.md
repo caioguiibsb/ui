@@ -1,1 +1,2 @@
 - Run `npm start`
+- Install new lib `make bash -> npm i <lib> --save -> docker compose down -> make build`
