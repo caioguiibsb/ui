@@ -1,35 +1,23 @@
-import './App.css';
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import Paper from '@mui/material/Paper';
-import MenuList from '@mui/material/MenuList';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ContentCut from '@mui/icons-material/ContentCut';
-import ContentCopy from '@mui/icons-material/ContentCopy';
-import ContentPaste from '@mui/icons-material/ContentPaste';
-import Cloud from '@mui/icons-material/Cloud';
+import React from "react";
+import {useDispatch} from "react-redux";
+import Cookies from "js-cookie";
+import "./App.css";
+import { RouterProvider } from "react-router-dom";
+import {getRoutes} from "./Routes";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import SnackBar from "./components/SnackBar/SnackBar";
 
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-  >
-    •
-  </Box>
-);
 
-const App = () => {
-  return (
-    <p style={{fontSize: "50px", textAlign: "center", marginTop: "25%", fontWeight: "800"}}>SISDASH</p>
-  );
+export default function App(){
+	const dispatch = useDispatch();
+	const token = Cookies.get("tk");
+
+	return (
+		<LocalizationProvider dateAdapter={AdapterMoment}>
+				<SnackBar>
+					<RouterProvider router={getRoutes(dispatch)}/>
+				</SnackBar>
+		</LocalizationProvider>
+	);
 }
-
-export default App;
