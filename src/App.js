@@ -15,9 +15,9 @@ export default function App(){
 
 	return (
 		<LocalizationProvider dateAdapter={AdapterMoment}>
-				<SnackBar>
-					<RouterProvider router={getRoutes(dispatch)}/>
-				</SnackBar>
+			<SnackBar>
+				<RouterProvider router={getRoutes(dispatch, token)}/>
+			</SnackBar>
 		</LocalizationProvider>
 	);
 }

@@ -13,9 +13,9 @@ import Error from "./containers/Error/Error";
 
 export const getRoutes = (dispatch, token, resetarSenha) => {
     let routes = [];
-
-    //Rotas autenticadas
+    console.log(token);
     if (token) {
+        // Usuário autenticado
         if (resetarSenha) {
             routes = [
                 // {path: "mudar_senha", element: <ChangePassword />, loader: () => checkAuthLoader(dispatch)},
@@ -25,15 +25,11 @@ export const getRoutes = (dispatch, token, resetarSenha) => {
         else {
             routes = [
                 {path: "dashboard", element: <Dashboard />, loader: () => checkAuthLoader(dispatch)},
-                // {path: "despesas", element: <Despesas />, loader: () => checkAuthLoader(dispatch)},
-                // {path: "historico_despesas", element: <DespesasHistoric />, loader: () => checkAuthLoader(dispatch)},
-                // {path: "upload_boletos", element: <UploadBoleto />, loader: () => checkAuthLoader(dispatch)},
-                // {path: "certificados", element: <Certificados />, loader: () => checkAuthLoader(dispatch)},
-                // {path: "perfil", element: <Perfil />, loader: () => checkAuthLoader(dispatch)},
                 {path: "*", element: <Navigate to="/dashboard" />}
             ];
         }
     } else {
+        // Usuário não autenticado
         routes = [
             {path: "forgot_pwd", element: <ForgotPwd />},
             {path: "check_code", element: <CheckCode />},
@@ -42,9 +38,10 @@ export const getRoutes = (dispatch, token, resetarSenha) => {
             {path: "*", element: <Navigate to="/" />}
         ];
     }
+
     return createBrowserRouter([
         {
-            path: "*",
+            path: "/",
             errorElement: <Error />,
             element: <NavBar />,
             children: routes

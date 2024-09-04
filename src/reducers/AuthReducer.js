@@ -8,7 +8,7 @@ import {
 
 const INITIAL_STATE = {
 	token: null,
-	isAdmin: false,
+	deviceToken: null,
 	resetarSenha: false,
 	email: "",
 	name: null,
