@@ -6,7 +6,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import {useDispatch, useSelector} from "react-redux";
 import api from "../../axios";
-import {loginUser} from "../../actions/AuthActions";
+import {changeName, loginUser} from "../../actions/AuthActions";
 import Loading from "../../components/Loading/Loading";
 import InputPassword from "../../components/Input/InputPassword";
 import { GRAY_LABEL_UX, RED_ERROR_UX, GRAY_HEADER_UX, styleYellowButton, GRAY_BORDER_TABLE, LINE_TABLE, GRAY_BG_BODY } from "../../shared/utils";
@@ -16,22 +16,20 @@ const Login = () => {
 
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
-    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
     const [password, setPassword] = useState("");
-    const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
 
-    const deviceToken = useSelector(state => state.AuthReducer.deviceToken);
 
     const handleSubmit = () => {
         const data = {
-            username: email,
+            username: name,
             password,
-            // device_token: deviceToken
         };
         setLoading(true);
         api.GetLogin(data).then(response => {
             let token = response.data.access_token;
+
             setLoading(false);
             dispatch(loginUser(token));
             window.location.reload();
@@ -70,7 +68,7 @@ const Login = () => {
                             label="Nome"
                             autoComplete="nome"
                             autoFocus
-                            onChange={(e) => {setEmail(e.target.value.trim());}}
+                            onChange={(e) => {setName(e.target.value.trim());}}
                             value={email}
                             variant="outlined"
                             sx={{ 

@@ -20,7 +20,7 @@ const instanceFormData = axios.create({
 instanceFormData.interceptors.request.use(config => {
 	let token = Cookies.get("tk");
 	if (token) {
-		config.headers.Authorization = `Token ${token}`
+		config.headers.Authorization = `Bearer ${token}`
 			.replace(/(^)|($)/g, "");
 	}
 	return config;
@@ -31,7 +31,7 @@ instanceFormData.interceptors.request.use(config => {
 instance.interceptors.request.use(config => {
 	let token = Cookies.get("tk");
 	if (token) {
-		config.headers.Authorization = `Token ${token}`
+		config.headers.Authorization = `Bearer ${token}`
 			.replace(/(^)|($)/g, "");
 	}
 	return config;
@@ -47,7 +47,7 @@ export default {
 	GetResetPwd(data){
 		return instance.put("auth/reset_pwd", data);
 	},
-	Logout(data) {
-		return instance.delete("auth/logout", data);
+	GetUserInfo(data) {
+		return instance.get("auth/detail", data);
 	},
 };

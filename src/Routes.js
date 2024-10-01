@@ -13,7 +13,7 @@ import Error from "./containers/Error/Error";
 
 export const getRoutes = (dispatch, token, resetarSenha) => {
     let routes = [];
-    console.log(token);
+    
     if (token) {
         // Usuário autenticado
         if (resetarSenha) {

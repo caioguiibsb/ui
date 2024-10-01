@@ -12,6 +12,7 @@ import SnackBar from "./components/SnackBar/SnackBar";
 export default function App(){
 	const dispatch = useDispatch();
 	const token = Cookies.get("tk");
+	// Cookies.remove("tk");
 
 	return (
 		<LocalizationProvider dateAdapter={AdapterMoment}>
