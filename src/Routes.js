@@ -14,37 +14,38 @@ import Error from "./containers/Error/Error";
 export const getRoutes = (dispatch, token, resetarSenha) => {
     let routes = [];
     
+    // Verifica se o usuário está autenticado (presença de token)
     if (token) {
-        // Usuário autenticado
+        // Caso o usuário precise resetar a senha, redireciona para a página de mudança de senha
         if (resetarSenha) {
             routes = [
-                // {path: "mudar_senha", element: <ChangePassword />, loader: () => checkAuthLoader(dispatch)},
-                // {path: "*", element: <Navigate to="/mudar_senha" />},
+                // Configuração de rotas para mudar senha, autenticando com o loader checkAuthLoader
             ];
-        }
-        else {
+        } else {
+            // Se o usuário está autenticado e não precisa resetar senha, redireciona para o dashboard
             routes = [
-                {path: "dashboard", element: <Dashboard />, loader: () => checkAuthLoader(dispatch)},
-                {path: "*", element: <Navigate to="/dashboard" />}
+                { path: "dashboard", element: <Dashboard />, loader: () => checkAuthLoader(dispatch) }, // Verifica autenticação antes de acessar o Dashboard
+                { path: "*", element: <Navigate to="/dashboard" /> } // Redireciona qualquer rota não reconhecida para o dashboard
             ];
         }
     } else {
-        // Usuário não autenticado
+        // Caso o usuário não esteja autenticado, define rotas para login e recuperação de senha
         routes = [
-            {path: "forgot_pwd", element: <ForgotPwd />},
-            {path: "check_code", element: <CheckCode />},
-            {path: "reset_pwd", element: <ResetPwd />},
-            {index: true, element: <Login />},
-            {path: "*", element: <Navigate to="/" />}
+            { path: "forgot_pwd", element: <ForgotPwd /> },  // Página de "Esqueci a senha"
+            { path: "check_code", element: <CheckCode /> },  // Página de verificação do código de recuperação
+            { path: "reset_pwd", element: <ResetPwd /> },  // Página de redefinição de senha
+            { index: true, element: <Login /> },  // Página de login
+            { path: "*", element: <Navigate to="/" /> }  // Redireciona rotas desconhecidas para a página de login
         ];
     }
 
+    // Cria o roteamento principal, com a NavBar como elemento principal e rotas definidas dentro
     return createBrowserRouter([
         {
             path: "/",
-            errorElement: <Error />,
-            element: <NavBar />,
-            children: routes
+            errorElement: <Error />,  // Página de erro padrão para rotas não existentes
+            element: <NavBar />,  // Componente de navegação que envolve as rotas
+            children: routes  // Rotas definidas com base na autenticação do usuário
         },
     ]);
 };
