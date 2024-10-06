@@ -4,13 +4,15 @@ import TextField from "@mui/material/TextField";
 import {Link as LinkRouter} from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import api from "../../axios";
-import {changeName, loginUser} from "../../actions/AuthActions";
+import {loginUser} from "../../actions/AuthActions";
 import Loading from "../../components/Loading/Loading";
 import InputPassword from "../../components/Input/InputPassword";
 import { GRAY_LABEL_UX, RED_ERROR_UX, GRAY_HEADER_UX, styleYellowButton, GRAY_BORDER_TABLE, LINE_TABLE, GRAY_BG_BODY } from "../../shared/utils";
 import "./Login.css";
+import { showSnackMessage } from "../../actions/SnackActions";
+
 
 const Login = () => {
 
@@ -29,18 +31,17 @@ const Login = () => {
         setLoading(true);
         api.GetLogin(data).then(response => {
             let token = response.data.access_token;
-
             setLoading(false);
             dispatch(loginUser(token));
             window.location.reload();
         }).catch(error => {
             setLoading(false);
-            if (error.response && error.response.status === 400) {
+            if (error.response.status === 401 || error.response.status === 422) {
                 setPasswordError(true);
+                dispatch(showSnackMessage({message: "O nome ou a senha informados estão incorretos!", severity: "error"}));
             }
         });
     };
-
 
     return (
         <Box
@@ -62,14 +63,13 @@ const Login = () => {
                 <Grid item xs={12}>
                     <Box component="form" sx={{ marginTop: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
                         <TextField
-                            data-testid="email-input"
                             margin="normal"
                             fullWidth
                             label="Nome"
                             autoComplete="nome"
                             autoFocus
                             onChange={(e) => {setName(e.target.value.trim());}}
-                            value={email}
+                            value={name}
                             variant="outlined"
                             sx={{ 
                                 width: "80%",
@@ -78,13 +78,13 @@ const Login = () => {
                         <InputPassword label="Senha" password={password} error={passwordError} handleChange={(e) => setPassword(e.target.value)} />
                         {
                             passwordError && (
-                                <p data-testid="email-pwd-error" style={{color: RED_ERROR_UX, fontSize: "12px"}}>O email ou senha informados estão incorretos!</p>
+                                <p style={{color: RED_ERROR_UX, fontSize: "14px"}}>O email ou senha informados estão incorretos!</p>
                             )
                         }
                         <Grid container sx={{marginTop: 2, marginBottom: 2}}>
                             <Grid item xs={12} sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-                                <LinkRouter data-testid="forgot-password-button" to='/forgot_pwd' variant="body2" style={{textDecoration: "none", color: GRAY_LABEL_UX, fontWeight: "600", fontSize: "14px"}}>
-                                    Esqueci minha senha
+                                <LinkRouter to='/create_account' variant="body2" style={{textDecoration: "none", color: GRAY_LABEL_UX, fontWeight: "600", fontSize: "14px"}}>
+                                    Criar uma conta
                                 </LinkRouter>
                             </Grid>
                         </Grid>
@@ -93,7 +93,7 @@ const Login = () => {
                                 <Loading />
                             ) : (
                                 <React.Fragment>
-                                    { (emailError || (password === "")) ? (
+                                    { ((name === "") || (password === "")) ? (
                                         <Button
                                             disabled
                                             data-testid="unabled-submit-button"

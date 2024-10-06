@@ -44,7 +44,7 @@ const InputPassword = (props) => {
 						</IconButton>
 					</InputAdornment>
 				}
-				label="Password"
+				label="Senha"
 			/>
 		</FormControl>
 	);

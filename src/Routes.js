@@ -9,33 +9,26 @@ import CheckCode from "./containers/Auth/CheckCode";
 import ResetPwd from "./containers/Auth/ResetPwd";
 import Dashboard from "./containers/Dashboard/Dashboard";
 import Error from "./containers/Error/Error";
+import CreateAccount from "./containers/Auth/CreateAccount";
 
 
 export const getRoutes = (dispatch, token, resetarSenha) => {
     let routes = [];
+
+    console.log(token)
     
     if (token) {
         // Usuário autenticado
-        if (resetarSenha) {
-            routes = [
-                // {path: "mudar_senha", element: <ChangePassword />, loader: () => checkAuthLoader(dispatch)},
-                // {path: "*", element: <Navigate to="/mudar_senha" />},
-            ];
-        }
-        else {
-            routes = [
-                {path: "dashboard", element: <Dashboard />, loader: () => checkAuthLoader(dispatch)},
-                {path: "*", element: <Navigate to="/dashboard" />}
-            ];
-        }
+        routes = [
+            {path: "dashboard", element: <Dashboard />, loader: () => checkAuthLoader(dispatch)},
+            {path: "*", element: <Navigate to="/dashboard" />}
+        ];
     } else {
         // Usuário não autenticado
         routes = [
-            {path: "forgot_pwd", element: <ForgotPwd />},
-            {path: "check_code", element: <CheckCode />},
-            {path: "reset_pwd", element: <ResetPwd />},
+            {path: "create_account", element: <CreateAccount />},
+            {path: "*", element: <Navigate to="/" />},
             {index: true, element: <Login />},
-            {path: "*", element: <Navigate to="/" />}
         ];
     }
 

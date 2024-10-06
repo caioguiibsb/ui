@@ -44,10 +44,10 @@ export default {
 	GetLogin(data) {
 		return instance.post("auth/login", data);
 	},
-	GetResetPwd(data){
-		return instance.put("auth/reset_pwd", data);
-	},
 	GetUserInfo(data) {
 		return instance.get("auth/detail", data);
 	},
+	CreateAccount(data) {
+		return instance.post("auth/register", data);
+	}
 };
