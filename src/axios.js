@@ -49,5 +49,9 @@ export default {
 	},
 	CreateAccount(data) {
 		return instance.post("auth/register", data);
+	},
+	// ======== PLANILHA ========
+	PostPlanilha(data) {
+		return instance.post("planilha/register", data);
 	}
 };

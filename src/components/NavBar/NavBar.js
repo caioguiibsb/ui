@@ -7,7 +7,6 @@ import {
     WHITE_SUBITEM_NAVBAR,
     BLACK_LABEL_UX,
     BLUE_LIGHT_UX_THEME,
-    COLOR_CONTAS1,
     GRAY_BG_UX
 } from "../../shared/utils";
 import List from "@mui/material/List";
@@ -15,7 +14,6 @@ import {Link} from "react-router-dom";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import DescriptionIcon from '@mui/icons-material/Description';
@@ -41,7 +39,7 @@ const NavBar = () => {
         if (token) {
             getUserInfo();
         }
-    }, []);
+    }, [token]);
 
     const getUserInfo = () => {
         api.GetUserInfo()
@@ -76,12 +74,12 @@ const NavBar = () => {
         // Verificando se o usuário está autenticado, se sim, exibe o menu lateral
         token ? (
             <Box sx={{display: "flex", height: "100vh", alignItems: "center"}}>
-                <Grid container sx={{backgroundColor: COLOR_CONTAS2, height: "93%", borderRadius: "0 25px 25px 0", display: "flex", flexDirection: "row", alignItems: "center", padding: 2, width: "300px"}}>
-                    <Grid item xs={12} sx={{display: "flex", gap: 0.5, justifyContent: "center", alignItems: "center"}}>
-                        <p style={{fontSize: "35px", fontWeight: "bold", color: WHITE_SUBITEM_NAVBAR}}>SisDash</p>
-                        <AutoGraphIcon sx={{fontSize: "45px", fontWeight: "bold", color: WHITE_SUBITEM_NAVBAR}}/>
-                    </Grid>
-                    <Grid item xs={12} sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", height: "88%"}}>
+                <Grid container sx={{backgroundColor: COLOR_CONTAS2, height: "93%", borderRadius: "0 25px 25px 0", display: "flex", flexDirection: "row", alignItems: "end", padding: 2, width: "300px"}}>
+                    <Grid item xs={12} sx={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", alignSelf: "start"}}>
+                        <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
+                            <p style={{fontSize: "35px", fontWeight: "bold", color: WHITE_SUBITEM_NAVBAR}}>SisDash</p>
+                            <AutoGraphIcon sx={{fontSize: "45px", fontWeight: "bold", color: WHITE_SUBITEM_NAVBAR}}/>
+                        </Box>
                         <List component="nav" sx={{display: "flex", gap: 2, flexDirection: "column"}}>
                             <Link to="/inicio" className="text-link" role="item" style={{textDecoration: "none"}}>
                                 <ListItemButton
@@ -153,10 +151,10 @@ const NavBar = () => {
                                 </ListItemButton>
                             </Link>
                         </List>
-                        <Grid item sx={{backgroundColor: GRAY_BG_UX, borderRadius: "50px", width: "100%", paddingX: 2, display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                            <p>Olá {name}</p>
-                            <LogoutIcon sx={{cursor: "pointer"}} onClick={() => logoutUser()} />
-                        </Grid>
+                    </Grid>
+                    <Grid item xs={12} sx={{backgroundColor: GRAY_BG_UX, borderRadius: "50px", width: "100%", paddingX: 2, display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                        <p>{name}</p>
+                        <LogoutIcon sx={{cursor: "pointer"}} onClick={() => logoutUser()} />
                     </Grid>
                 </Grid>
                 <Box
@@ -168,7 +166,7 @@ const NavBar = () => {
                         overflowY: "unset",
                         margin: "0 30px",
                         height: "93vh",
-                        borderRadius: "25px",
+                        borderRadius: "25px 5px 5px 25px",
                         border: "2px solid #E2E8F0",
                     }}
                 >

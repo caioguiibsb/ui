@@ -9,7 +9,8 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import SnackBar from "./components/SnackBar/SnackBar";
 
 
-export default function App(){
+export default function App() {
+
 	const dispatch = useDispatch();
 	const token = Cookies.get("tk");
 	// Cookies.remove("tk");

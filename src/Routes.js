@@ -1,27 +1,23 @@
 import React  from "react";
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import {checkAuthLoader} from "./shared/auth";
-// import ChangePassword from "./containers/Auth/ChangePassword";
 import Login from "./containers/Auth/Login";
 import NavBar from "./components/NavBar/NavBar";
-import ForgotPwd from "./containers/Auth/ForgotPwd";
-import CheckCode from "./containers/Auth/CheckCode";
-import ResetPwd from "./containers/Auth/ResetPwd";
 import Dashboard from "./containers/Dashboard/Dashboard";
 import Error from "./containers/Error/Error";
 import CreateAccount from "./containers/Auth/CreateAccount";
+import Inicial from "./containers/Inicial/Inicial";
 
 
-export const getRoutes = (dispatch, token, resetarSenha) => {
+export const getRoutes = (dispatch, token) => {
     let routes = [];
-
-    console.log(token)
     
     if (token) {
         // Usuário autenticado
         routes = [
             {path: "dashboard", element: <Dashboard />, loader: () => checkAuthLoader(dispatch)},
-            {path: "*", element: <Navigate to="/dashboard" />}
+            {path: "inicio", element: <Inicial />, loader: () => checkAuthLoader(dispatch)},
+            {path: "*", element: <Navigate to="/inicio" />}
         ];
     } else {
         // Usuário não autenticado
@@ -34,7 +30,7 @@ export const getRoutes = (dispatch, token, resetarSenha) => {
 
     return createBrowserRouter([
         {
-            path: "/",
+            path: "*",
             errorElement: <Error />,
             element: <NavBar />,
             children: routes
