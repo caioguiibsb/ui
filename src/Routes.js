@@ -7,6 +7,7 @@ import Dashboard from "./containers/Dashboard/Dashboard";
 import Error from "./containers/Error/Error";
 import CreateAccount from "./containers/Auth/CreateAccount";
 import Inicial from "./containers/Inicial/Inicial";
+import Planilha from "./containers/Planilha/Planilha";
 
 
 export const getRoutes = (dispatch, token) => {
@@ -17,6 +18,7 @@ export const getRoutes = (dispatch, token) => {
         routes = [
             {path: "dashboard", element: <Dashboard />, loader: () => checkAuthLoader(dispatch)},
             {path: "inicio", element: <Inicial />, loader: () => checkAuthLoader(dispatch)},
+            {path: "planilha", element: <Planilha />, loader: () => checkAuthLoader(dispatch)},
             {path: "*", element: <Navigate to="/inicio" />}
         ];
     } else {

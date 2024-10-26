@@ -12,26 +12,32 @@ import {
 	COLOR_THEME,
 	GRAY_HEADER_UX
 } from "../../shared/utils";
+import FilledInput from '@mui/material/FilledInput';
 
 const InputPassword = (props) => {
 	const [showPassword, setShowPassword] = useState(false);
 
 	return(
-		<FormControl error={props.error} sx={{ width: "80%", marginTop: 0.5 }} variant="outlined">
+		<FormControl error={props.error} sx={{ width: "80%", marginTop: 0.5 }} variant="filled">
 			<InputLabel 
-				htmlFor="outlined-adornment-password" 
-				style={{color: GRAY_LABEL_UX, fontSize: props.matches ? "1rem" : "0.9rem"}}
+				htmlFor="filled-adornment-password" 
+				style={{color: "gray", fontSize: props.matches ? "1rem" : "0.9rem"}}
 			>
 				{props.label}
 			</InputLabel>
-			<OutlinedInput
+			<FilledInput
 				data-testid="password-input"
 				id="outlined-adornment-password"
 				required
+				size="small"
 				type={showPassword ? "text" : "password"}
 				value={props.password}
 				onChange={(e) => props.handleChange(e)}
-				style={{backgroundColor: GRAY_BG_UX, color: GRAY_HEADER_UX}}
+				sx={{
+					"& .MuiFilledInput-input": {
+						color: "#E2E8F0",
+					},
+				}}
 				endAdornment={
 					<InputAdornment position="end">
 						<IconButton

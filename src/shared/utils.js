@@ -323,9 +323,8 @@ export const styleButtonMobile = {
 };
 
 export const styleYellowButton = {
-	backgroundColor: YELLOW_BG_UX,
+	backgroundColor: "#FF5E1E",
 	color: GRAY_BG_UX,
-	border: `1px solid ${YELLOW_BG_UX}`,
 	fontWeight: "600",
 	boxShadow: "none",
 };

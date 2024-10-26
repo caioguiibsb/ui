@@ -59,11 +59,11 @@ const NavBar = () => {
 	};
 
     const styleSelected = (pathList) => {
-		return {backgroundColor: pathList.includes(activeButton) ? BLUE_LIGHT_UX_THEME :  COLOR_CONTAS2};
+		return {backgroundColor: pathList.includes(activeButton) ? "#FF5E1E" :  "transparent"};
 	};
 
     const styleColor = (pathList) => {
-        return {color: pathList.includes(activeButton) ? WHITE_SUBITEM_NAVBAR : BLACK_LABEL_UX};
+        return {color: pathList.includes(activeButton) ? WHITE_SUBITEM_NAVBAR : "white"};
 	};
 
     const handleChangeClick = (local) => {
@@ -74,11 +74,11 @@ const NavBar = () => {
         // Verificando se o usuário está autenticado, se sim, exibe o menu lateral
         token ? (
             <Box sx={{display: "flex", height: "100vh", alignItems: "center"}}>
-                <Grid container sx={{backgroundColor: COLOR_CONTAS2, height: "93%", borderRadius: "0 25px 25px 0", display: "flex", flexDirection: "row", alignItems: "end", padding: 2, width: "300px"}}>
+                <Grid container sx={{backgroundColor: "#201F1B", height: "93%", borderRadius: "0 25px 25px 0", display: "flex", flexDirection: "row", alignItems: "end", padding: 2, maxWidth: "250px"}}>
                     <Grid item xs={12} sx={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", alignSelf: "start"}}>
                         <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
-                            <p style={{fontSize: "35px", fontWeight: "bold", color: WHITE_SUBITEM_NAVBAR}}>SisDash</p>
-                            <AutoGraphIcon sx={{fontSize: "45px", fontWeight: "bold", color: WHITE_SUBITEM_NAVBAR}}/>
+                            <p style={{fontSize: "35px", fontWeight: "bold", color: "#FF5E1E"}}>SisDash</p>
+                            <AutoGraphIcon sx={{fontSize: "45px", fontWeight: "bold", color: "#FF5E1E"}}/>
                         </Box>
                         <List component="nav" sx={{display: "flex", gap: 2, flexDirection: "column"}}>
                             <Link to="/inicio" className="text-link" role="item" style={{textDecoration: "none"}}>
@@ -104,24 +104,24 @@ const NavBar = () => {
                                     />
                                 </ListItemButton>
                             </Link>
-                            <Link to="/planilhas" className="text-link" role="item" style={{textDecoration: "none"}}>
+                            <Link to="/planilha" className="text-link" role="item" style={{textDecoration: "none"}}>
                                 <ListItemButton
                                     style={{
                                         ...styles.ListItem,
-                                        ...styleSelected("planilhas"),
+                                        ...styleSelected("planilha"),
                                     }}
-                                    onClick={() => handleChangeClick("planilhas")}
+                                    onClick={() => handleChangeClick("planilha")}
                                 >
                                     <ListItemIcon>
-                                        <DescriptionIcon style={styleColor(["planilhas"])}/>
+                                        <DescriptionIcon style={styleColor(["planilha"])}/>
                                     </ListItemIcon>
                                     <ListItemText
                                         primary={
                                             <Typography
                                                 component="span"
-                                                sx={{ fontSize: "16px", ...styleColor(["planilhas"]), fontWeight: "400", fontFamily: "Rubik" }}
+                                                sx={{ fontSize: "16px", ...styleColor(["planilha"]), fontWeight: "400", fontFamily: "Rubik" }}
                                             >
-                                                Planilhas
+                                                Planilha
                                             </Typography>
                                         }
                                     />
@@ -160,14 +160,13 @@ const NavBar = () => {
                 <Box
                     component="main"
                     sx={{
-                        backgroundColor: GRAY_BG_UX,
+                        backgroundColor: "#201f1b",
                         flexGrow: 1,
                         overflowX: "auto",
                         overflowY: "unset",
                         margin: "0 30px",
                         height: "93vh",
                         borderRadius: "25px 5px 5px 25px",
-                        border: "2px solid #E2E8F0",
                     }}
                 >
                     <Outlet />

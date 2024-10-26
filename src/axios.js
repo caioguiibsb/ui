@@ -53,5 +53,8 @@ export default {
 	// ======== PLANILHA ========
 	PostPlanilha(data) {
 		return instance.post("planilha/register", data);
+	},
+	SendUploadPlanilha(data) {
+		return instanceFormData.put("planilha/upload", data);
 	}
 };

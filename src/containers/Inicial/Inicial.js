@@ -4,15 +4,19 @@ import { Grid, Typography, Button, Box, List, ListItem, ListItemText, TextField,
 import DownloadIcon from "@mui/icons-material/Download";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import FormIcon from "@mui/icons-material/Description";
-import planilha from "../../assets/files/planilha_padrao.xlsx";
+import planilha from "../../assets/files/planilha_sisdash_atualizado.xlsx";
 import api from "../../axios";
 import { showSnackMessage } from "../../actions/SnackActions";
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { useNavigate } from "react-router-dom";
 
 
 const Inicial = () => {
 
     const formRef = useRef(null);
     const dispatch = useDispatch();
+    const nav = useNavigate();
+    const hiddenFileInput = React.useRef(null); 
     const name = useSelector(state => state.AuthReducer.name);
 
     const [showForm, setShowForm] = useState(false);
@@ -24,6 +28,8 @@ const Inicial = () => {
     const [taxa, setTaxa] = useState('');
     const [formaPagamento, setFormaPagamento] = useState('');
     const [nomeProduto, setNomeProduto] = useState('');
+    const [selectedFile, setSelectedFile] = useState();
+    const [isSelected, setIsSelected] = useState(false);
 
     const [categoria, setCategoria] = useState();
 
@@ -82,7 +88,7 @@ const Inicial = () => {
         { value: "Crédito", label: "Crédito" },
         { value: "Débito", label: "Débito" },
         { value: "Pix", label: "Pix" },
-        { value: "Dinheiro", label: "Dinheiro" },
+        { value: "Boleto", label: "Boleto" },
     ];
 
     const categorias = [
@@ -98,9 +104,39 @@ const Inicial = () => {
         { value: "Serviços", label: "Serviços" },
     ];
 
+    const handleClick = () => {
+        hiddenFileInput.current.click();
+    };
+
+    const changeHandler = (event) => {
+        let file = event.target.files[0];
+        setSelectedFile(file);
+        setIsSelected(true);
+    };
+
+    const sendPlanilha = () => {
+        const formData = new FormData();
+        formData.append("selected_file", selectedFile);        
+
+        api.SendUploadPlanilha(formData).then(() => {
+            dispatch(showSnackMessage({ message: "Sua planilha foi carregada com sucesso!" }));
+            setSelectedFile(null);
+            setIsSelected(false);
+            nav("/planilhas");
+        }).catch((error) => {      
+            console.log(error) 
+            if (error.response.status === 400 && error.response.data) {
+                dispatch(showSnackMessage({ message: `Error encontrado: ${error.response.data}`, severity: "error" }));
+            }
+            else {
+                dispatch(showSnackMessage({ message: "Algo deu errado! Tente novamente mais tarde", severity: "error" }));
+            }
+        });
+    }
+
     return (
         <div className="main">
-            <h1 style={{position: "fixed", top: 40}}>Início</h1>
+            <h1 style={{position: "fixed", top: 40, color: "white"}}>Início</h1>
             <Grid
                 container
                 justifyContent="center" 
@@ -115,22 +151,44 @@ const Inicial = () => {
                         textAlign: "center",
                     }}
                 >
-                <Typography variant="h4" gutterBottom>
+                <Typography variant="h4" gutterBottom color="#E2E8F0">
                     Olá, {name} 👋 Seja bem-vindo ao nosso sistema!
                 </Typography>
 
-                <Typography variant="body1" color="text.secondary" paragraph sx={{marginBottom: 6}}>
+                <Typography variant="body1" color="gray" paragraph sx={{marginBottom: 6}}>
                     Para que possamos gerar gráficos e explorar todas as funcionalidades, 
                     faça o download da planilha abaixo e preencha com os dados de vendas do mês desejado.
                     Ou, se preferir, preencha o formulário com os dados de venda diária.
                 </Typography>
-                
-                <div style={{boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)", borderRadius: 10, padding: "15px"}}>
-                    <Typography variant="h5" sx={{ marginBottom: 2 }}>
+                {
+                    isSelected &&
+                        <Grid container xs={12} sx={{display: "flex",flexWrap: "nowrap", alignItems: "center", justifyContent: "center", marginBottom: 5}}>
+                            <Grid item xs={12} style={{...styles.styleFieldImport, display: "flex", flexDirection: "column", gap: 5, marginBottom: "20px"}}>
+                                <span style={{fontWeight: "bold"}}>Nome do arquivo selecionado:</span>
+                                <span>{selectedFile.name}</span>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Button 
+                                    variant="contained"
+                                    size="small" 
+                                    startIcon={<FileUploadIcon />} 
+                                    sx={{ marginBottom: 2, width: "250px", backgroundColor: "#FF5E1E" }}
+                                    onClick={() => sendPlanilha()}
+                                >
+                                    ENVIAR PLANILHA
+                                </Button>
+                            </Grid>
+                        </Grid>
+                }
+                <div style={{boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)", borderRadius: 10, padding: "30px 15px", backgroundColor: "#3F3C37"}}>
+                    <Typography variant="h5" sx={{ marginBottom: 2, fontWeight: "bold", fontStyle: "italic" }} color="#FF5E1E">
                         Como devo preencher a planilha?
                     </Typography>
 
-                    <List dense sx={{padding: 0}}>
+                    <List dense sx={{padding: 0, color: "#E2E8F0"}} >
+                        <ListItem>
+                            <ListItemText primary="Nome do Produto ➔ nome dado ao produto vendido" />
+                        </ListItem>
                         <ListItem>
                             <ListItemText primary="Data Venda ➔ Data da venda do produto." />
                         </ListItem>
@@ -149,52 +207,68 @@ const Inicial = () => {
                         <ListItem>
                             <ListItemText primary="Forma de Pagamento ➔ Método usado para realizar o pagamento." />
                         </ListItem>
+                        <ListItem>
+                            <ListItemText primary="Categoria ➔ Classificação usada para o produto" />
+                        </ListItem>
                     </List>
                 </div>
                 <Box sx={{ marginTop: 6, display: "flex", flexDirection: "column", alignItems: "center"}}>
                     <Button 
-                        variant="contained" 
-                        color="primary" 
+                        variant="contained"
                         size="small" 
                         startIcon={<DownloadIcon />} 
-                        sx={{ marginBottom: 2, width: "250px" }}
+                        sx={{ marginBottom: 2, width: "250px", backgroundColor: "#FF5E1E" }}
                         href={planilha}
                         download="planilha_sisdash.xlsx"
                     >
                         Baixar Planilha
                     </Button>
                     <Button 
-                        variant="contained" 
-                        color="secondary" 
+                        variant="contained"
                         size="small" 
                         startIcon={<FormIcon />} 
-                        sx={{ marginBottom: 2, width: "250px" }}
+                        sx={{ marginBottom: 2, width: "250px", backgroundColor: "#FF5E1E" }}
                         onClick={() => openForm()}
                     >
                         Formulário
                     </Button>
                     <Button 
-                        variant="contained" 
-                        color="info" 
+                        variant="contained"
                         size="small" 
                         startIcon={<AttachFileIcon />} 
-                        sx={{ width: "250px" }}
+                        sx={{ width: "250px", backgroundColor: "#FF5E1E" }}
+                        onClick={() => handleClick()}
                     >
                         Anexar
                     </Button>
+                    <input 
+                        type="file"
+                        accept=".xls, .xlsx, .csv"
+                        ref={hiddenFileInput}
+                        onChange={changeHandler}
+                        style={{display: "none"}} 
+                    />
                 </Box>
 
                 {/* Formulário */}
                 {showForm && (
-                    <Box ref={formRef} sx={{ marginTop: 11, textAlign: "left" }}>
-                        <Typography variant="h5" gutterBottom sx={{marginBottom: 3}}>
+                    <Box ref={formRef} sx={{ marginTop: 11, textAlign: "left", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)", borderRadius: 2.6, padding: "30px", backgroundColor: "#3F3C37" }}>
+                        <Typography variant="h5" gutterBottom sx={{marginBottom: 3}} color="#E2E8F0">
                             Preencha os dados de vendas
                         </Typography>
-                        <TextField 
+                        <TextField
+                            variant="filled"
                             label="Nome do produto"
-                            fullWidth 
-                            variant="outlined" 
-                            sx={{ marginBottom: 2 }}
+                            fullWidth
+                            sx={{ 
+                                marginBottom: 2,
+                                "& .MuiFilledInput-root": {
+                                    color: "#E2E8F0",
+                                },
+                                "& .MuiInputLabel-root": {
+                                    color: "gray"
+                                }
+                            }}
                             size="small"
                             required
                             value={nomeProduto}
@@ -204,8 +278,16 @@ const Inicial = () => {
                             label="Data Venda" 
                             type="date" 
                             fullWidth 
-                            variant="outlined" 
-                            sx={{ marginBottom: 2 }} 
+                            variant="filled" 
+                            sx={{ 
+                                marginBottom: 2,
+                                "& .MuiFilledInput-root": {
+                                    color: "#E2E8F0",
+                                },
+                                "& .MuiInputLabel-root": {
+                                    color: "gray"
+                                }
+                            }}
                             InputLabelProps={{ shrink: true }}
                             size="small"
                             required
@@ -216,8 +298,16 @@ const Inicial = () => {
                             label="Data Pagamento" 
                             type="date" 
                             fullWidth 
-                            variant="outlined" 
-                            sx={{ marginBottom: 2 }} 
+                            variant="filled" 
+                            sx={{ 
+                                marginBottom: 2,
+                                "& .MuiFilledInput-root": {
+                                    color: "#E2E8F0",
+                                },
+                                "& .MuiInputLabel-root": {
+                                    color: "gray"
+                                }
+                            }}
                             InputLabelProps={{ shrink: true }} 
                             size="small"
                             required
@@ -228,8 +318,16 @@ const Inicial = () => {
                             label="Valor Bruto" 
                             type="number" 
                             fullWidth 
-                            variant="outlined" 
-                            sx={{ marginBottom: 2 }}
+                            variant="filled" 
+                            sx={{ 
+                                marginBottom: 2,
+                                "& .MuiFilledInput-root": {
+                                    color: "#E2E8F0",
+                                },
+                                "& .MuiInputLabel-root": {
+                                    color: "gray"
+                                }
+                            }}
                             size="small"
                             required
                             value={valorBruto}
@@ -239,8 +337,16 @@ const Inicial = () => {
                             label="Valor Líquido" 
                             type="number" 
                             fullWidth 
-                            variant="outlined" 
-                            sx={{ marginBottom: 2 }}
+                            variant="filled" 
+                            sx={{ 
+                                marginBottom: 2,
+                                "& .MuiFilledInput-root": {
+                                    color: "#E2E8F0",
+                                },
+                                "& .MuiInputLabel-root": {
+                                    color: "gray"
+                                }
+                            }}
                             size="small"
                             required
                             value={valorLiquido}
@@ -250,20 +356,33 @@ const Inicial = () => {
                             label="Taxa" 
                             type="number" 
                             fullWidth 
-                            variant="outlined" 
-                            sx={{ marginBottom: 2 }}
+                            variant="filled" 
+                            sx={{ 
+                                marginBottom: 2,
+                                "& .MuiFilledInput-root": {
+                                    color: "#E2E8F0",
+                                },
+                                "& .MuiInputLabel-root": {
+                                    color: "gray"
+                                }
+                            }}
                             size="small"
                             required
                             value={taxa}
                             onChange={(e) => setTaxa(e.target.value)}
                         />
-                        <FormControl fullWidth variant="outlined" sx={{ marginBottom: 2 }} size="small" required>
-                            <InputLabel id="forma-pagamento-label">Forma de Pagamento</InputLabel>
+                        <FormControl fullWidth variant="filled" sx={{ marginBottom: 2 }} size="small" required>
+                            <InputLabel id="forma-pagamento-label" sx={{color: "gray"}}>Forma de Pagamento</InputLabel>
                             <Select
                                 labelId="forma-pagamento-label"
                                 value={formaPagamento}
                                 onChange={(e) => setFormaPagamento(e.target.value)}
                                 label="Forma de Pagamento"
+                                sx={{ 
+                                    "& .MuiFilledInput-input": {
+                                        color: "#E2E8F0",
+                                    },
+                                }}
                             >
                                 {formaPagamentoOptions.map((option) => (
                                     <MenuItem key={option.value} value={option.value}>
@@ -272,13 +391,18 @@ const Inicial = () => {
                                 ))}
                             </Select>
                         </FormControl>
-                        <FormControl fullWidth variant="outlined" sx={{ marginBottom: 2 }} size="small" required>
-                            <InputLabel id="forma-pagamento-label">Categoria do produto</InputLabel>
+                        <FormControl fullWidth variant="filled" sx={{ marginBottom: 2 }} size="small" required>
+                            <InputLabel id="forma-pagamento-label" sx={{color: "gray"}}>Categoria do produto</InputLabel>
                             <Select
                                 labelId="forma-pagamento-label"
                                 value={categoria}
                                 onChange={(e) => setCategoria(e.target.value)}
                                 label="Categoria do produto"
+                                sx={{ 
+                                    "& .MuiFilledInput-input": {
+                                        color: "#E2E8F0",
+                                    },
+                                }}
                             >
                                 {categorias.map((option) => (
                                     <MenuItem key={option.value} value={option.value}>
@@ -289,7 +413,7 @@ const Inicial = () => {
                         </FormControl>
                         <Button 
                             variant="contained" 
-                            color="primary"
+                            sx={{backgroundColor: "#FF5E1E"}}
                             size="small" 
                             disabled={!isFormValid()}
                             onClick={postFormulario}
@@ -305,3 +429,17 @@ const Inicial = () => {
 }
 
 export default Inicial;
+
+const styles = {
+    styleFieldImport: {
+        color : "#E2E8F0"
+    },
+
+    formControl: {
+        "& .MuifilledInput-root": {
+            "& fieldset": {
+                borderColor: "#E2E8F0"
+            },
+        }
+    },
+};

@@ -46,14 +46,14 @@ const Login = () => {
     return (
         <Box
             sx={{
-                backgroundColor: GRAY_BG_BODY,
+                backgroundColor: "#ae9e7b",
                 height: "100vh",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center"
             }}
         >
-			<Grid container sx={{backgroundColor: LINE_TABLE, width: "500px", borderRadius: 2, border: `1px solid ${GRAY_BORDER_TABLE}`, padding: 2}}>
+			<Grid container sx={{backgroundColor: "#201F1B", width: "500px", borderRadius: 2, padding: 2}}>
                 <Grid item xs={12} sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <p style={styles.header}>Entre em sua conta</p>
                 </Grid>
@@ -65,14 +65,21 @@ const Login = () => {
                         <TextField
                             margin="normal"
                             fullWidth
+                            size="small"
                             label="Nome"
                             autoComplete="nome"
                             autoFocus
                             onChange={(e) => {setName(e.target.value.trim());}}
                             value={name}
-                            variant="outlined"
+                            variant="filled"
                             sx={{ 
                                 width: "80%",
+                                "& .MuiFilledInput-root": {
+                                    color: "#E2E8F0",
+                                },
+                                "& .MuiInputLabel-root": {
+                                    color: "gray"
+                                }
                             }}
                         />
                         <InputPassword label="Senha" password={password} error={passwordError} handleChange={(e) => setPassword(e.target.value)} />
@@ -101,7 +108,7 @@ const Login = () => {
                                             fullWidth
                                             variant="contained"
                                             sx={{ ...styles.buttonSubmit }}
-                                            style={{fontWeight: "600"}}
+                                            style={{fontWeight: "600", color: "gray"}}
                                         >
                                             Entrar
                                         </Button>
@@ -153,7 +160,7 @@ const styles = {
         fontWeight: "bold",
         fontSize: "36px",
         lineHeight: "32px",
-        color: GRAY_HEADER_UX,
+        color: "white",
         textAlign: "center",
     },
     text: {
@@ -163,7 +170,7 @@ const styles = {
         fontWeight: "400",
         fontSize: "16px",
         lineHeight: "20px",
-        color: GRAY_LABEL_UX,
+        color: "#E2E8F0",
         textAlign: "center",
     },
     copyright: {
