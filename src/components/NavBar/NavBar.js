@@ -3,14 +3,15 @@ import Cookies from "js-cookie";
 import {Outlet} from "react-router-dom";
 import { Grid } from "@mui/material";
 import {
-    COLOR_CONTAS2,
     WHITE_SUBITEM_NAVBAR,
     BLACK_LABEL_UX,
-    BLUE_LIGHT_UX_THEME,
-    GRAY_BG_UX
+    GRAY_BG_UX,
+    PRIMARY,
+    SECONDARY,
+    PRIMARY_DARK
 } from "../../shared/utils";
 import List from "@mui/material/List";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -31,8 +32,9 @@ const NavBar = () => {
     const token = Cookies.get("tk");
 
     const dispatch = useDispatch();
+    const location = useLocation();
 
-    const [activeButton, setActiveButton] = useState("inicio");
+    const [activeButton, setActiveButton] = useState();
     const name = useSelector(state => state.AuthReducer.name);
 
     useEffect(() => {
@@ -40,6 +42,11 @@ const NavBar = () => {
             getUserInfo();
         }
     }, [token]);
+
+    useEffect(() => {
+        const path = location.pathname.split("/")[1];
+        setActiveButton(path);
+    }, [location])
 
     const getUserInfo = () => {
         api.GetUserInfo()
@@ -74,10 +81,10 @@ const NavBar = () => {
         // Verificando se o usuário está autenticado, se sim, exibe o menu lateral
         token ? (
             <Box sx={{display: "flex", height: "100vh", alignItems: "center"}}>
-                <Grid container sx={{backgroundColor: "#201F1B", height: "93%", borderRadius: "0 25px 25px 0", display: "flex", flexDirection: "row", alignItems: "end", padding: 2, maxWidth: "250px"}}>
+                <Grid container sx={{backgroundColor: PRIMARY, height: "93%", borderRadius: "0 25px 25px 0", display: "flex", flexDirection: "row", alignItems: "end", padding: 2, maxWidth: "250px"}}>
                     <Grid item xs={12} sx={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", alignSelf: "start"}}>
                         <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
-                            <p style={{fontSize: "35px", fontWeight: "bold", color: "#FF5E1E"}}>SisDash</p>
+                            <p style={{fontSize: "35px", fontWeight: "bold", color: GRAY_BG_UX}}>SisDash</p>
                             <AutoGraphIcon sx={{fontSize: "45px", fontWeight: "bold", color: "#FF5E1E"}}/>
                         </Box>
                         <List component="nav" sx={{display: "flex", gap: 2, flexDirection: "column"}}>
@@ -160,13 +167,14 @@ const NavBar = () => {
                 <Box
                     component="main"
                     sx={{
-                        backgroundColor: "#201f1b",
+                        backgroundColor: GRAY_BG_UX,
                         flexGrow: 1,
                         overflowX: "auto",
                         overflowY: "unset",
                         margin: "0 30px",
                         height: "93vh",
-                        borderRadius: "25px 5px 5px 25px",
+                        borderRadius: "15px",
+                        boxShadow: "0px 10px 15px -3px rgba(0,0,0,0.2)"
                     }}
                 >
                     <Outlet />

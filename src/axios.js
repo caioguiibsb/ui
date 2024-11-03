@@ -56,5 +56,9 @@ export default {
 	},
 	SendUploadPlanilha(data) {
 		return instanceFormData.put("planilha/upload", data);
-	}
+	},
+	// ======== DASHBOARD ========
+	GetDashboard(data) {
+		return instance.get("dashboard/detail", data);
+	},
 };

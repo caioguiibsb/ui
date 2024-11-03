@@ -102,6 +102,9 @@ export const COLOR_CONTAS1 = "#00A7CF30";
 export const COLOR_CONTAS2 = "#00A7CF";
 export const COLOR_CONTAS3 = "#FAA66630";
 export const COLOR_CONTAS4 = "#FAA666";
+export const PRIMARY = "#0A3D62";
+export const SECONDARY = "#D3D3D3";
+export const PRIMARY_DARK = "#2C3E50"
 
 //NAVBAR
 
@@ -754,3 +757,12 @@ export const formatarValorBrasileiro = (valor) => {
 export const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
+
+export const styleCard = {
+	boxShadow: "0px 10px 15px -3px rgba(0,0,0,0.2)",
+	borderRadius: 2,
+	width: 1020,
+	minWidth: 500,
+	paddingY: 3,
+	border: "1px solid #D3D3D3"
+}
