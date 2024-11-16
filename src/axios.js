@@ -57,8 +57,15 @@ export default {
 	SendUploadPlanilha(data) {
 		return instanceFormData.put("planilha/upload", data);
 	},
+	GetPlanilhaDetail(data) {
+		return instance.get("planilha/detail", { params: { date_selected: data.date_selected, id_historico: data.id_historico } });
+	},
 	// ======== DASHBOARD ========
 	GetDashboard(data) {
-		return instance.get("dashboard/detail", { params: { date_selected: data.date_selected } });
+		return instance.get("dashboard/detail", { params: { date_selected: data.date_selected, id_historico: data.id_historico } });
+	},
+	// ======== HISTORICO ========
+	GetHistorico() {
+		return instance.get("historico/detail");
 	},
 };

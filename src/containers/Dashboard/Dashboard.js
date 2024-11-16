@@ -10,12 +10,18 @@ import { showSnackMessage } from "../../actions/SnackActions";
 import { Skeleton, Button } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 const Dashboard = () => {
 
     const dispatch = useDispatch();
+    const location = useLocation();
+    const navigate = useNavigate();
 
+    let id_historico = location?.state?.id || null;
+    const data = location?.state?.data || null;
+    const hora = location?.state?.hora || null;
     const [loading, setLoading] = useState(false);
     const [faturamentoSeries, setFaturamentoSeries] = useState([
         {
@@ -73,11 +79,14 @@ const Dashboard = () => {
         getDashboard();
     }, []);
 
-    const getDashboard = async () => {
+    const getDashboard = async (clear=false) => {
         setLoading(true);
         let dates_formatted = selectedOptions.map((date) => date.value);
         const dataRequest = {
             date_selected: dates_formatted
+        };
+        if (!clear && id_historico) {
+            dataRequest.id_historico = id_historico;
         };
         api.GetDashboard(dataRequest).then((response) => {
             let data = response.data;
@@ -145,9 +154,23 @@ const Dashboard = () => {
         })
     };
 
+    const handleBack = () => {
+        navigate("/dashboard", { replace: true });
+        getDashboard(true);
+    };
+
     return (
         <div className="main">
-			<h1>Dashboard</h1>
+			<h1>
+                Dashboard
+                {
+                    id_historico && (
+                        <Typography sx={{fontWeight: "normal", color: PRIMARY}}>
+                            Dados do histórico ({data} - {hora})
+                        </Typography>
+                    )
+                }
+            </h1>
             {
                 loading ? (
                     <React.Fragment>
@@ -179,10 +202,10 @@ const Dashboard = () => {
                                 flexWrap: "wrap",
                                 justifyContent: "center",
                                 paddingX: "12%",
-                                paddingY: "50px",
+                                paddingY: "10px",
                             }}
                         >
-                            <Box sx={{width: "40%", marginBottom: 4, display: "flex", gap: 2, alignItems: "center", justifyContent: "center", flex: 1}}>
+                            <Box sx={{width: "40%", marginBottom: 4, display: "flex", gap: 2, alignItems: "center", justifyContent: "center", flex: 1, flexWrap: "wrap"}}>
                                 <Autocomplete
                                     multiple
                                     id="size-small-filled"
@@ -192,7 +215,12 @@ const Dashboard = () => {
                                     onChange={(event, newValue) => {setSelectedOptions(newValue)}}
                                     defaultValue={selectedOptions}
                                     renderInput={(params) => (
-                                        <TextField {...params} label="Período" variant="filled" placeholder="Selecione" />
+                                        <TextField
+                                            {...params}
+                                            label="Período"
+                                            variant="filled"
+                                            placeholder="Selecione"
+                                        />
                                     )}
                                     sx={{ width: '500px' }}
                                 />
@@ -200,13 +228,25 @@ const Dashboard = () => {
                                     variant="contained" 
                                     sx={{backgroundColor: "#FF5E1E", height: "30.75px", paddingX: "20px"}}
                                     size="small" 
-                                    onClick={getDashboard}
+                                    onClick={() => getDashboard()}
                                 >
                                     Filtrar
                                 </Button>
+                                {
+                                    id_historico && (
+                                        <Button 
+                                            variant="contained" 
+                                            sx={{backgroundColor: "#FF5E1E", height: "30.75px", paddingX: "20px"}}
+                                            size="small" 
+                                            onClick={() => handleBack()}
+                                        >
+                                            Exibir todos os dados
+                                        </Button>
+                                    )
+                                }
                             </Box>
                             <Box sx={{...styleCard, width: "100%"}}>
-                                <Typography color="black">
+                                <Typography sx={{fontWeight: "bold", color: PRIMARY}}>
                                     Faturamento Bruto x Líquido (R$)
                                 </Typography>
                                 <LineChart
@@ -231,7 +271,7 @@ const Dashboard = () => {
                                 />
                             </Box>
                             <Box sx={{...styleCard, flex: 1}}>
-                                <Typography color="black">
+                                <Typography sx={{fontWeight: "bold", color: PRIMARY}}>
                                     Vendas por forma de pagamento (%)
                                 </Typography>
                                 <BarChart
@@ -256,7 +296,7 @@ const Dashboard = () => {
                                 />
                             </Box>
                             <Box sx={{...styleCard, flex: 1}}>
-                                <Typography color="black">
+                                <Typography sx={{fontWeight: "bold", color: PRIMARY}}>
                                     Vendas por categoria (%)
                                 </Typography>
                                 <PieChart
@@ -274,7 +314,7 @@ const Dashboard = () => {
                                 />
                             </Box>
                             <Box sx={{...styleCard, width: "100%"}}>
-                                <Typography color="black">
+                                <Typography sx={{fontWeight: "bold", color: PRIMARY}}>
                                     Quantidade de vendas
                                 </Typography>
                                 <LineChart
@@ -299,7 +339,7 @@ const Dashboard = () => {
                                 />
                             </Box>
                             <Box sx={{...styleCard, flex: 1}}>
-                                <Typography color="black">
+                                <Typography sx={{fontWeight: "bold", color: PRIMARY}}>
                                     Produtos/Serviços mais vendidos (%)
                                 </Typography>
                                 <PieChart
@@ -317,7 +357,7 @@ const Dashboard = () => {
                                 />
                             </Box>
                             <Box sx={{...styleCard, flex: 1}}>
-                                <Typography color="black">
+                                <Typography sx={{fontWeight: "bold", color: PRIMARY}}>
                                     Margem de lucro por período (%)
                                 </Typography>
                                 <BarChart

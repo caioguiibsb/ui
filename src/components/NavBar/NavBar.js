@@ -22,6 +22,8 @@ import { useSelector, useDispatch } from "react-redux";
 import api from "../../axios";
 import {changeName} from "../../actions/AuthActions";
 import LogoutIcon from '@mui/icons-material/Logout';
+import logo from "../../assets/files/logo.png";
+import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
 
 
 const NavBar = () => {
@@ -78,10 +80,8 @@ const NavBar = () => {
             <Box sx={{display: "flex", height: "100vh", alignItems: "center"}}>
                 <Grid container sx={{backgroundColor: PRIMARY, height: "93%", borderRadius: "0 25px 25px 0", display: "flex", flexDirection: "row", alignItems: "end", padding: 2, maxWidth: "250px"}}>
                     <Grid item xs={12} sx={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", alignSelf: "start"}}>
-                        <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
-                            <p style={{fontSize: "35px", fontWeight: "400", color: GRAY_BG_UX}}>
-                                Sync<strong style={{color: "#FF5E1E"}}>Dash</strong>
-                            </p>
+                        <Box sx={{display: "flex", alignItems: "center", gap: 2, paddingY: 4}}>
+                            <img src={logo} alt="Logo" style={{height: "40px"}} />
                         </Box>
                         <List component="nav" sx={{display: "flex", gap: 2, flexDirection: "column"}}>
                             <Link to="/inicio" className="text-link" role="item" style={{textDecoration: "none"}}>
@@ -148,6 +148,29 @@ const NavBar = () => {
                                                 sx={{ fontSize: "16px", ...styleColor(["dashboard"]), fontWeight: "400", fontFamily: "Rubik" }}
                                             >
                                                 Dashboard
+                                            </Typography>
+                                        }
+                                    />
+                                </ListItemButton>
+                            </Link>
+                            <Link to="/historico" className="text-link" role="item" style={{textDecoration: "none"}}>
+                                <ListItemButton
+                                    style={{
+                                        ...styles.ListItem,
+                                        ...styleSelected("historico"),
+                                    }}
+                                    onClick={() => handleChangeClick("historico")}
+                                >
+                                    <ListItemIcon>
+                                        <ManageHistoryIcon style={styleColor(["historico"])}/>
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary={
+                                            <Typography
+                                                component="span"
+                                                sx={{ fontSize: "16px", ...styleColor(["historico"]), fontWeight: "400", fontFamily: "Rubik" }}
+                                            >
+                                                Histórico
                                             </Typography>
                                         }
                                     />

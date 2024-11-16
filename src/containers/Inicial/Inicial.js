@@ -4,7 +4,7 @@ import { Grid, Typography, Button, Box, List, ListItem, ListItemText, TextField,
 import DownloadIcon from "@mui/icons-material/Download";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import FormIcon from "@mui/icons-material/Description";
-import planilha from "../../assets/files/planilha_sisdash_atualizado.xlsx";
+import planilha from "../../assets/files/planilha_syncdash_atualizado.xlsx";
 import api from "../../axios";
 import { showSnackMessage } from "../../actions/SnackActions";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
@@ -121,9 +121,8 @@ const Inicial = () => {
             dispatch(showSnackMessage({ message: "Sua planilha foi carregada com sucesso!" }));
             setSelectedFile(null);
             setIsSelected(false);
-            nav("/planilhas");
-        }).catch((error) => {      
-            console.log(error) 
+            nav("/dashboard");
+        }).catch((error) => {
             if (error.response.status === 400 && error.response.data) {
                 dispatch(showSnackMessage({ message: `Error encontrado: ${error.response.data}`, severity: "error" }));
             }
@@ -223,7 +222,7 @@ const Inicial = () => {
                                     startIcon={<DownloadIcon />} 
                                     sx={{ width: "200px", backgroundColor: "#FF5E1E" }}
                                     href={planilha}
-                                    download="planilha_sisdash.xlsx"
+                                    download="planilha_syncdash.xlsx"
                                 >
                                     Baixar Planilha
                                 </Button>
