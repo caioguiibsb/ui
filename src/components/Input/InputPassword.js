@@ -35,7 +35,7 @@ const InputPassword = (props) => {
 				onChange={(e) => props.handleChange(e)}
 				sx={{
 					"& .MuiFilledInput-input": {
-						color: "#E2E8F0",
+						color: "black",
 					},
 				}}
 				endAdornment={

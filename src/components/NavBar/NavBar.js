@@ -7,8 +7,6 @@ import {
     BLACK_LABEL_UX,
     GRAY_BG_UX,
     PRIMARY,
-    SECONDARY,
-    PRIMARY_DARK
 } from "../../shared/utils";
 import List from "@mui/material/List";
 import {Link, useLocation} from "react-router-dom";
@@ -24,7 +22,6 @@ import { useSelector, useDispatch } from "react-redux";
 import api from "../../axios";
 import {changeName} from "../../actions/AuthActions";
 import LogoutIcon from '@mui/icons-material/Logout';
-import AutoGraphIcon from '@mui/icons-material/AutoGraph';
 
 
 const NavBar = () => {
@@ -38,9 +35,7 @@ const NavBar = () => {
     const name = useSelector(state => state.AuthReducer.name);
 
     useEffect(() => {
-        if (token) {
-            getUserInfo();
-        }
+        getUserInfo();
     }, [token]);
 
     useEffect(() => {
@@ -84,8 +79,9 @@ const NavBar = () => {
                 <Grid container sx={{backgroundColor: PRIMARY, height: "93%", borderRadius: "0 25px 25px 0", display: "flex", flexDirection: "row", alignItems: "end", padding: 2, maxWidth: "250px"}}>
                     <Grid item xs={12} sx={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", alignSelf: "start"}}>
                         <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
-                            <p style={{fontSize: "35px", fontWeight: "bold", color: GRAY_BG_UX}}>SisDash</p>
-                            <AutoGraphIcon sx={{fontSize: "45px", fontWeight: "bold", color: "#FF5E1E"}}/>
+                            <p style={{fontSize: "35px", fontWeight: "400", color: GRAY_BG_UX}}>
+                                Sync<strong style={{color: "#FF5E1E"}}>Dash</strong>
+                            </p>
                         </Box>
                         <List component="nav" sx={{display: "flex", gap: 2, flexDirection: "column"}}>
                             <Link to="/inicio" className="text-link" role="item" style={{textDecoration: "none"}}>

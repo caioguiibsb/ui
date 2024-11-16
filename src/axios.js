@@ -59,6 +59,6 @@ export default {
 	},
 	// ======== DASHBOARD ========
 	GetDashboard(data) {
-		return instance.get("dashboard/detail", data);
+		return instance.get("dashboard/detail", { params: { date_selected: data.date_selected } });
 	},
 };

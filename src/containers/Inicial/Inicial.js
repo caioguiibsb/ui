@@ -100,8 +100,6 @@ const Inicial = () => {
         { value: "Beleza e Cuidados Pessoais", label: "Beleza e Cuidados Pessoais" },
         { value: "Saúde e Bem-Estar", label: "Saúde e Bem-Estar" },
         { value: "Brinquedos e Jogos", label: "Brinquedos e Jogos" },
-        { value: "Ferramentas e Materiais de Construção", label: "Ferramentas e Materiais de Construção" },
-        { value: "Artigos para Animais de Estimação", label: "Artigos para Animais de Estimação" },
         { value: "Serviços", label: "Serviços" },
     ];
 
@@ -263,21 +261,22 @@ const Inicial = () => {
                             <Typography variant="h5" gutterBottom sx={{marginBottom: 3}} color="black">
                                 Preencha os dados de vendas
                             </Typography>
-                            <TextField
-                                variant="filled"
-                                label="Nome do produto"
-                                fullWidth
-                                sx={{ 
-                                    marginBottom: 2,
-                                    "& .MuiInputLabel-root": {
-                                        color: "gray"
-                                    }
-                                }}
-                                size="small"
-                                required
-                                value={nomeProduto}
-                                onChange={(e) => setNomeProduto(e.target.value)}
-                            />
+                                <TextField
+                                    variant="filled"
+                                    label="Nome do produto"
+                                    fullWidth
+                                    sx={{ 
+                                        marginBottom: 2,
+                                        "& .MuiInputLabel-root": {
+                                            color: "gray"
+                                        }
+                                    }}
+                                    size="small"
+                                    required
+                                    value={nomeProduto}
+                                    onChange={(e) => setNomeProduto(e.target.value)}
+                                    inputProps={{ maxLength: 25 }}
+                                />
                             <TextField 
                                 label="Data Venda" 
                                 type="date" 

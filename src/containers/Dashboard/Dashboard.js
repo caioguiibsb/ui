@@ -7,7 +7,9 @@ import { PRIMARY, styleCard } from "../../shared/utils";
 import api from "../../axios";
 import { useDispatch } from "react-redux";
 import { showSnackMessage } from "../../actions/SnackActions";
-import { Skeleton } from '@mui/material';
+import { Skeleton, Button } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 
 
 const Dashboard = () => {
@@ -60,7 +62,12 @@ const Dashboard = () => {
             cornerRadius: 5,
         },
     ]);
+    const [margemLucro, setMargemLucro] = useState([
+        { data: [], label: 'Lucro' },
+    ])
     const [faturamentoDates, setFaturamentoDates] = useState([]);
+    const [options, setOptions] = useState([]);
+    const [selectedOptions, setSelectedOptions] = useState([]);
 
     useEffect(() => {
         getDashboard();
@@ -68,7 +75,11 @@ const Dashboard = () => {
 
     const getDashboard = async () => {
         setLoading(true);
-        api.GetDashboard().then((response) => {
+        let dates_formatted = selectedOptions.map((date) => date.value);
+        const dataRequest = {
+            date_selected: dates_formatted
+        };
+        api.GetDashboard(dataRequest).then((response) => {
             let data = response.data;
             const brutoValues = data.faturamento[0].bruto;
             const liquidoValues = data.faturamento[1].liquido;
@@ -85,6 +96,13 @@ const Dashboard = () => {
                 prevVendasFormaPagamento.map((forma) => ({
                     ...forma,
                     data: pagamentoData[forma.label] || [],
+                }))
+            );
+            const margemLucroPorcentagem = data.margem_lucro_porcentagem;
+            setMargemLucro((prevMargemLucro) => 
+                prevMargemLucro.map((margem) => ({
+                    ...margem,
+                    data: margemLucroPorcentagem,
                 }))
             );
             const categoriaData = data.vendas_por_categoria;
@@ -114,7 +132,11 @@ const Dashboard = () => {
                     })),
                 }))
             );
-            setFaturamentoDates(data.dates);
+            let dates = data.dates.map((date) => ({label: date, value: date}));
+            let dates_selected = data.date_selected.map((date) => ({label: date, value: date}));
+            setFaturamentoDates(data.date_selected);
+            setOptions(dates);
+            setSelectedOptions(dates_selected);
             setLoading(false);
             dispatch(showSnackMessage({message: "Dados carregados com sucesso!", severity: "success"}));
         }).catch(() => {
@@ -123,25 +145,21 @@ const Dashboard = () => {
         })
     };
 
-    const data2 = [
-        
-    ]
-
     return (
         <div className="main">
 			<h1>Dashboard</h1>
             {
                 loading ? (
                     <React.Fragment>
-                        <Box display="flex" flexDirection="row" justifyContent="center">
-                            <Skeleton variant="rectangular" width="70%" height={300} />
+                        <Box display="flex" flexDirection="row" justifyContent="center" sx={{marginTop: 10}}>
+                            <Skeleton variant="rectangular" width="76%" height={300} />
                         </Box>
                         <Box display="flex" flexDirection="row" gap={2} pt={2} width="100%" justifyContent="center">
-                            <Skeleton variant="rectangular" width="34.3%" height={300} />
-                            <Skeleton variant="rectangular" width="34.3%" height={300} />
+                            <Skeleton variant="rectangular" width="37.6%" height={300} />
+                            <Skeleton variant="rectangular" width="37.7%" height={300} />
                         </Box>
                         <Box display="flex" flexDirection="row" justifyContent="center" pt={2}>
-                            <Skeleton variant="rectangular" width="70%" height={300} />
+                            <Skeleton variant="rectangular" width="76%" height={300} />
                         </Box>
                     </React.Fragment>
                 ) : (
@@ -160,17 +178,40 @@ const Dashboard = () => {
                                 gap: 2,
                                 flexWrap: "wrap",
                                 justifyContent: "center",
-                                paddingX: "50px"
+                                paddingX: "12%",
+                                paddingY: "50px",
                             }}
                         >
-                            <Box sx={{...styleCard}}>
+                            <Box sx={{width: "40%", marginBottom: 4, display: "flex", gap: 2, alignItems: "center", justifyContent: "center", flex: 1}}>
+                                <Autocomplete
+                                    multiple
+                                    id="size-small-filled"
+                                    size="small"
+                                    options={options}
+                                    getOptionLabel={(option) => option.label}
+                                    onChange={(event, newValue) => {setSelectedOptions(newValue)}}
+                                    defaultValue={selectedOptions}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Período" variant="filled" placeholder="Selecione" />
+                                    )}
+                                    sx={{ width: '500px' }}
+                                />
+                                <Button 
+                                    variant="contained" 
+                                    sx={{backgroundColor: "#FF5E1E", height: "30.75px", paddingX: "20px"}}
+                                    size="small" 
+                                    onClick={getDashboard}
+                                >
+                                    Filtrar
+                                </Button>
+                            </Box>
+                            <Box sx={{...styleCard, width: "100%"}}>
                                 <Typography color="black">
                                     Faturamento Bruto x Líquido (R$)
                                 </Typography>
                                 <LineChart
                                     xAxis={[{ scaleType: 'point', data: faturamentoDates }]}
                                     series={faturamentoSeries}
-                                    maxWidth={1020}
                                     height={300}
                                     grid={{ vertical: true, horizontal: true }}
                                     sx={{
@@ -182,11 +223,14 @@ const Dashboard = () => {
                                             direction: 'row',
                                             position: { vertical: 'bottom', horizontal: 'middle' },
                                             padding: -5,
+                                        },
+                                        noDataOverlay: {
+                                            message: "Sem dados para exibir",
                                         }
                                     }}
                                 />
                             </Box>
-                            <Box sx={{...styleCard, width: 500}}>
+                            <Box sx={{...styleCard, flex: 1}}>
                                 <Typography color="black">
                                     Vendas por forma de pagamento (%)
                                 </Typography>
@@ -194,7 +238,6 @@ const Dashboard = () => {
                                     colors={["#FF5E1E", PRIMARY, "#FFD700", "#1ABC9C"]}
                                     xAxis={[{ scaleType: 'band', data: faturamentoDates }]}
                                     series={vendasFormaPagamento}
-                                    width={500}
                                     height={300}
                                     sx={{
                                         "& .MuiChartsLegend-series text": { fontSize: "0.8em !important" },
@@ -205,11 +248,14 @@ const Dashboard = () => {
                                             direction: 'row',
                                             position: { vertical: 'bottom', horizontal: 'middle' },
                                             padding: -5,
+                                        },
+                                        noDataOverlay: {
+                                            message: "Sem dados para exibir",
                                         }
                                     }}
                                 />
                             </Box>
-                            <Box sx={{...styleCard, width: 500}}>
+                            <Box sx={{...styleCard, flex: 1}}>
                                 <Typography color="black">
                                     Vendas por categoria (%)
                                 </Typography>
@@ -219,18 +265,21 @@ const Dashboard = () => {
                                     sx={{
                                         "& .MuiChartsLegend-series text": { fontSize: "0.8em !important" },
                                     }}
-                                    width={500}
                                     height={300}
+                                    slotProps={{
+                                        noDataOverlay: {
+                                            message: "Sem dados para exibir",
+                                        }
+                                    }}
                                 />
                             </Box>
-                            <Box sx={{...styleCard}}>
+                            <Box sx={{...styleCard, width: "100%"}}>
                                 <Typography color="black">
                                     Quantidade de vendas
                                 </Typography>
                                 <LineChart
                                     xAxis={[{ scaleType: 'point', data: faturamentoDates }]}
                                     series={vendasTotais}
-                                    maxWidth={1020}
                                     height={300}
                                     grid={{ vertical: true, horizontal: true }}
                                     sx={{
@@ -242,11 +291,14 @@ const Dashboard = () => {
                                             direction: 'row',
                                             position: { vertical: 'bottom', horizontal: 'middle' },
                                             padding: -5,
+                                        },
+                                        noDataOverlay: {
+                                            message: "Sem dados para exibir",
                                         }
                                     }}
                                 />
                             </Box>
-                            <Box sx={{...styleCard, width: 500}}>
+                            <Box sx={{...styleCard, flex: 1}}>
                                 <Typography color="black">
                                     Produtos/Serviços mais vendidos (%)
                                 </Typography>
@@ -256,21 +308,22 @@ const Dashboard = () => {
                                     sx={{
                                         "& .MuiChartsLegend-series text": { fontSize: "0.8em !important" },
                                     }}
-                                    width={500}
                                     height={300}
+                                    slotProps={{
+                                        noDataOverlay: {
+                                            message: "Sem dados para exibir",
+                                        }
+                                    }}
                                 />
                             </Box>
-                            <Box sx={{...styleCard, width: 500}}>
+                            <Box sx={{...styleCard, flex: 1}}>
                                 <Typography color="black">
                                     Margem de lucro por período (%)
                                 </Typography>
                                 <BarChart
-                                    colors={["#FF5E1E", PRIMARY, "#FFD700", "#1ABC9C"]}
-                                    xAxis={[{ scaleType: 'band', data: ['jul/2024', 'ago/2024', 'set/2024'] }]}
-                                    series={[
-                                        { data: [12, 10, 30], label: 'Lucro' },
-                                    ]}
-                                    width={500}
+                                    colors={[PRIMARY]}
+                                    xAxis={[{ scaleType: 'band', data: faturamentoDates }]}
+                                    series={margemLucro}
                                     height={300}
                                     sx={{
                                         "& .MuiChartsLegend-series text": { fontSize: "0.8em !important" },
@@ -281,6 +334,9 @@ const Dashboard = () => {
                                             direction: 'row',
                                             position: { vertical: 'bottom', horizontal: 'middle' },
                                             padding: -5,
+                                        },
+                                        noDataOverlay: {
+                                            message: "Sem dados para exibir",
                                         }
                                     }}
                                 />

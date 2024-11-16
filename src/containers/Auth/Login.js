@@ -9,7 +9,7 @@ import api from "../../axios";
 import {loginUser} from "../../actions/AuthActions";
 import Loading from "../../components/Loading/Loading";
 import InputPassword from "../../components/Input/InputPassword";
-import { GRAY_LABEL_UX, RED_ERROR_UX, GRAY_HEADER_UX, styleYellowButton, GRAY_BORDER_TABLE, LINE_TABLE, GRAY_BG_BODY } from "../../shared/utils";
+import { GRAY_LABEL_UX, RED_ERROR_UX, SECONDARY, styleYellowButton, GRAY_BORDER_TABLE, LINE_TABLE, GRAY_BG_BODY } from "../../shared/utils";
 import "./Login.css";
 import { showSnackMessage } from "../../actions/SnackActions";
 
@@ -46,14 +46,15 @@ const Login = () => {
     return (
         <Box
             sx={{
-                backgroundColor: "#ae9e7b",
+                backgroundColor: SECONDARY,
                 height: "100vh",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center"
+                justifyContent: "center",
             }}
         >
-			<Grid container sx={{backgroundColor: "#201F1B", width: "500px", borderRadius: 2, padding: 2}}>
+			<Grid container sx={{backgroundColor: "#ffffff", width: "500px", borderRadius: 2, padding: 2, 
+                boxShadow: "0px 10px 15px -3px rgba(0,0,0,0.2)"}}>
                 <Grid item xs={12} sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <p style={styles.header}>Entre em sua conta</p>
                 </Grid>
@@ -75,7 +76,7 @@ const Login = () => {
                             sx={{ 
                                 width: "80%",
                                 "& .MuiFilledInput-root": {
-                                    color: "#E2E8F0",
+                                    color: "black",
                                 },
                                 "& .MuiInputLabel-root": {
                                     color: "gray"
@@ -160,7 +161,7 @@ const styles = {
         fontWeight: "bold",
         fontSize: "36px",
         lineHeight: "32px",
-        color: "white",
+        color: "black",
         textAlign: "center",
     },
     text: {
@@ -170,7 +171,7 @@ const styles = {
         fontWeight: "400",
         fontSize: "16px",
         lineHeight: "20px",
-        color: "#E2E8F0",
+        color: "gray",
         textAlign: "center",
     },
     copyright: {
