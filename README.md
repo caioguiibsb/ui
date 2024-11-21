@@ -12,3 +12,4 @@
 - Run: `make bash`
 - Run: `npm i <package> --save`
 - Run: `docker compose down` and `make build`
+ola meu nome e china
