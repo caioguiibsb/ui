@@ -3,7 +3,7 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { Grid, Box, Typography } from "@mui/material";
-import { PRIMARY, styleCard } from "../../shared/utils";
+import { PRIMARY, styleCard, styleKPI, format } from "../../shared/utils";
 import api from "../../axios";
 import { useDispatch } from "react-redux";
 import { showSnackMessage } from "../../actions/SnackActions";
@@ -68,12 +68,17 @@ const Dashboard = () => {
             cornerRadius: 5,
         },
     ]);
-    const [margemLucro, setMargemLucro] = useState([
-        { data: [], label: 'Lucro' },
+    const [diaComMaisVendas, setDiaComMaisVendas] = useState([
+        { data: [], label: 'Qtd. vendas' },
     ])
+    const [datesWeek, setDatesWeek] = useState([]);
     const [faturamentoDates, setFaturamentoDates] = useState([]);
     const [options, setOptions] = useState([]);
     const [selectedOptions, setSelectedOptions] = useState([]);
+    const [fatLiquidoTotal, setFatLiquidoTotal] = useState(0);
+    const [fatBrutoTotal, setFatBrutoTotal] = useState(0);
+    const [qtdVendasTotal, setQtdVendasTotal] = useState(0);
+    const [produtoMaisVendido, setProdutoMaisVendido] = useState("-");
 
     useEffect(() => {
         getDashboard();
@@ -107,13 +112,14 @@ const Dashboard = () => {
                     data: pagamentoData[forma.label] || [],
                 }))
             );
-            const margemLucroPorcentagem = data.margem_lucro_porcentagem;
-            setMargemLucro((prevMargemLucro) => 
-                prevMargemLucro.map((margem) => ({
-                    ...margem,
-                    data: margemLucroPorcentagem,
+            const diasVenda = data.dias_com_mais_venda;
+            setDiaComMaisVendas((prevDiaComMaisVendas) =>
+                prevDiaComMaisVendas.map((item) => ({
+                    ...item,
+                    data: diasVenda.map((dia) => dia.total_vendas),
                 }))
             );
+            setDatesWeek(diasVenda.map((dia) => dia.dia));
             const categoriaData = data.vendas_por_categoria;
             setVendasCategoria((prevVendasCategoria) =>
                 prevVendasCategoria.map((categoria) => ({
@@ -141,6 +147,10 @@ const Dashboard = () => {
                     })),
                 }))
             );
+            setFatLiquidoTotal(data.faturamento_liquido_total);
+            setFatBrutoTotal(data.faturamento_bruto_total);
+            setQtdVendasTotal(data.vendas_total);
+            setProdutoMaisVendido(data.produto_mais_vendido);
             let dates = data.dates.map((date) => ({label: date, value: date}));
             let dates_selected = data.date_selected.map((date) => ({label: date, value: date}));
             setFaturamentoDates(data.date_selected);
@@ -244,6 +254,40 @@ const Dashboard = () => {
                                         </Button>
                                     )
                                 }
+                            </Box>
+                            <Box sx={{width: "100%", display: "flex", gap: 2, alignItems: "center", justifyContent: "center"}}>
+                                <Box sx={{...styleKPI}}>
+                                    <Typography sx={{fontWeight: "bold", color: PRIMARY}}>
+                                        Fat. Bruto Total
+                                    </Typography>
+                                    <Typography sx={{fontWeight: "bold", fontSize: "22px"}}>
+                                        R$ {format(fatBrutoTotal)}
+                                    </Typography>
+                                </Box>
+                                <Box sx={{...styleKPI}}>
+                                    <Typography sx={{fontWeight: "bold", color: PRIMARY}}>
+                                        Fat. Líquido Total
+                                    </Typography>
+                                    <Typography sx={{fontWeight: "bold", fontSize: "22px"}}>
+                                        R$ {format(fatLiquidoTotal)}
+                                    </Typography>
+                                </Box>
+                                <Box sx={{...styleKPI}}>
+                                    <Typography sx={{fontWeight: "bold", color: PRIMARY}}>
+                                        Qtd. Vendas Total
+                                    </Typography>
+                                    <Typography sx={{fontWeight: "bold", fontSize: "22px",}}>
+                                        {qtdVendasTotal}
+                                    </Typography>
+                                </Box>
+                                <Box sx={{...styleKPI}}>
+                                    <Typography sx={{fontWeight: "bold", color: PRIMARY}}>
+                                        Produto mais Vendido
+                                    </Typography>
+                                    <Typography sx={{fontWeight: "bold", fontSize: "22px"}}>
+                                        {produtoMaisVendido}
+                                    </Typography>
+                                </Box>
                             </Box>
                             <Box sx={{...styleCard, width: "100%"}}>
                                 <Typography sx={{fontWeight: "bold", color: PRIMARY}}>
@@ -358,12 +402,12 @@ const Dashboard = () => {
                             </Box>
                             <Box sx={{...styleCard, flex: 1}}>
                                 <Typography sx={{fontWeight: "bold", color: PRIMARY}}>
-                                    Margem de lucro por período (%)
+                                    Quantidade de vendas por dia
                                 </Typography>
                                 <BarChart
                                     colors={[PRIMARY]}
-                                    xAxis={[{ scaleType: 'band', data: faturamentoDates }]}
-                                    series={margemLucro}
+                                    xAxis={[{ scaleType: 'band', data: datesWeek }]}
+                                    series={diaComMaisVendas}
                                     height={300}
                                     sx={{
                                         "& .MuiChartsLegend-series text": { fontSize: "0.8em !important" },

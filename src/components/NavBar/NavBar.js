@@ -24,6 +24,7 @@ import {changeName} from "../../actions/AuthActions";
 import LogoutIcon from '@mui/icons-material/Logout';
 import logo from "../../assets/files/logo.png";
 import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
+import Footer from "../Footer/Footer";
 
 
 const NavBar = () => {
@@ -183,21 +184,24 @@ const NavBar = () => {
                         <LogoutIcon sx={{cursor: "pointer"}} onClick={() => logoutUser()} />
                     </Grid>
                 </Grid>
-                <Box
-                    component="main"
-                    sx={{
-                        backgroundColor: GRAY_BG_UX,
-                        flexGrow: 1,
-                        overflowX: "auto",
-                        overflowY: "unset",
-                        margin: "0 30px",
-                        height: "93vh",
-                        borderRadius: "15px",
-                        boxShadow: "0px 10px 15px -3px rgba(0,0,0,0.2)"
-                    }}
-                >
-                    <Outlet />
-                </Box>
+                <Grid item xs={12} sx={{display: "flex", flexDirection: "column", flexGrow: 1, height: "93vh", gap: 2}}>
+                    <Box
+                        component="main"
+                        sx={{
+                            backgroundColor: GRAY_BG_UX,
+                            flexGrow: 1,
+                            overflowX: "auto",
+                            overflowY: "unset",
+                            margin: "0 30px",
+                            height: "93vh",
+                            borderRadius: "15px",
+                            boxShadow: "0px 10px 15px -3px rgba(0,0,0,0.2)"
+                        }}
+                    >
+                        <Outlet />
+                    </Box>
+                    <Footer/>
+                </Grid>
             </Box>
         ) : (
             <Outlet />

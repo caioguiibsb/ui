@@ -767,6 +767,15 @@ export const styleCard = {
 	border: "1px solid #D3D3D3"
 }
 
+export const styleKPI = {
+	flex: 1,
+	boxShadow: "0px 10px 15px -3px rgba(0,0,0,0.2)",
+	borderRadius: 2,
+	paddingY: 3,
+	border: "1px solid #D3D3D3",
+	height: "fixed"
+}
+
 export const localeText = {
 	noRowsLabel: 'Nenhuma linha',
 	noResultsOverlayLabel: 'Nenhum resultado encontrado.',
